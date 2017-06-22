@@ -7,6 +7,7 @@
 #include "I2Cdev.h"
 #include "MPU6050_6Axis_MotionApps20.h"
 #include "Wire.h"
+#include "Kalman.h"
 
 // PINES:
 //0 y 1 para tx y rx del bluetooth
@@ -57,6 +58,10 @@ boolean encendido=false;
 boolean hacia_delante=false;
 boolean reversa=false;
 
+//Kalman German
+Kalman filtroX(0.125,32,1023,0);
+Kalman filtroY(0.125,32,1023,0);
+double acce_x_filtrado, acce_y_filtrado, acce_x_medida, acce_y_medida;
 
 
 // MPU control/status vars
@@ -151,6 +156,7 @@ void setup() {
     pinMode(MOTOR_TRACCION_R, OUTPUT);  
       
     pinMode(LED_PIN, OUTPUT);
+
 }
 
 
@@ -173,6 +179,22 @@ void loop() {
       movimiento();       
     }
 
+    //Kalman German Begin
+    
+    mpu.getAcceleration(&ax, &ay, &az);
+    acce_x_medida = (double) ax;
+    acce_y_medida = (double) ay;
+    acce_x_filtrado = filtroX.getFilteredValue(acce_x_medida);
+    acce_y_filtrado = filtroY.getFilteredValue(acce_y_medida);
+    Serial.print("acce_x_filtrado = ");
+    Serial.print(acce_x_filtrado);
+    Serial.print(" , acce_y_filtrado =");
+    Serial.print(acce_y_filtrado);
+    Serial.print("\n");
+
+    //Kalman German End
+
+    
     // Configuraciones del acelerometro, Funca no tocar >:( 
     delay(50); 
     mpu.resetFIFO();
