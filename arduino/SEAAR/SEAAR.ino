@@ -59,10 +59,32 @@ boolean hacia_delante=false;
 boolean reversa=false;
 
 //Kalman German
-Kalman filtroX(0.125,32,1023,0);
-Kalman filtroY(0.125,32,1023,0);
-double acce_x_filtrado, acce_y_filtrado, acce_x_medida, acce_y_medida;
+/*
+x = x
+p = p + q;
+k = p / (p + r);
+x = x + k * (measurement – x);
+p = (1 – k) * p;
 
+Donde:
+q = covariancia del ruido del proceso
+r = covarianza de ruido de medición
+x = valor de interés
+p = covariación del error de estimación
+k = ganancia de Kalman
+
+q = 0,125
+r = 32
+p = 1023 // "lo suficientemente grande como para reducirlo"
+Kalman filtroX(0.125,32,1023,0);
+
+ */
+ 
+Kalman filtroX(0.125,10,1024,0);
+Kalman filtroY(0.125,10,1024,0);
+Kalman filtroZ(0.125,10,1024,9.8);
+double acce_x_filtrado, acce_y_filtrado, acce_z_filtrado, acce_x_medida, acce_y_medida, acce_z_medida;
+double tiempo_antes_x, tiempo_despues_x, tiempo_dx;
 
 // MPU control/status vars
 bool dmpReady = false;  // set true if DMP init was successful
@@ -108,15 +130,17 @@ void setup() {
     devStatus = mpu.dmpInitialize();
     /*
      *  -1422  2175  971   73    2     29
+     *  Your offsets:  -1444 2220  983 73  5 21
+
         acelX acelY acelZ giroX giroY giroZ
 
      */
     mpu.setXGyroOffset(73); 
-    mpu.setYGyroOffset(2);
-    mpu.setZGyroOffset(29);
-    mpu.setXAccelOffset(-1422); 
-    mpu.setYAccelOffset(2175); 
-    mpu.setZAccelOffset(971); 
+    mpu.setYGyroOffset(5);
+    mpu.setZGyroOffset(21);
+    mpu.setXAccelOffset(-1444); 
+    mpu.setYAccelOffset(2220); 
+    mpu.setZAccelOffset(983); 
   
     if (devStatus == 0) {
         // turn on the DMP, now that it's ready
@@ -182,15 +206,36 @@ void loop() {
     //Kalman German Begin
     
     mpu.getAcceleration(&ax, &ay, &az);
-    acce_x_medida = (double) ax;
-    acce_y_medida = (double) ay;
+    
+    acce_x_medida = (double) ax* (9.81/16384.0);
+    acce_y_medida = (double) ay* (9.81/16384.0);
+    acce_z_medida = (double) az* (9.81/16384.0);
+
+    tiempo_antes_x = micros();
     acce_x_filtrado = filtroX.getFilteredValue(acce_x_medida);
+    tiempo_despues_x = micros();
+    
+    tiempo_dx=tiempo_despues_x-tiempo_antes_x;
     acce_y_filtrado = filtroY.getFilteredValue(acce_y_medida);
-    Serial.print("acce_x_filtrado = ");
+    acce_z_filtrado = filtroZ.getFilteredValue(acce_z_medida);
+    Serial.print("X =[");
+    Serial.print(acce_x_medida);
+    Serial.print("]-[");
     Serial.print(acce_x_filtrado);
-    Serial.print(" , acce_y_filtrado =");
+    Serial.print("] , Y =[");
+    Serial.print(acce_y_medida);
+    Serial.print("]-[");
     Serial.print(acce_y_filtrado);
-    Serial.print("\n");
+    Serial.print("] , Z =[");
+    Serial.print(acce_z_medida);
+    Serial.print("]-[");
+    Serial.print(acce_z_filtrado);
+    Serial.print("] , tiempo Kalman dx= [");
+    Serial.print(tiempo_dx);
+    Serial.print("], Tiempo desde que se prendio [");
+    Serial.print(micros());
+    Serial.print("]\n");
+    
 
     //Kalman German End
 
