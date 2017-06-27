@@ -129,18 +129,17 @@ void setup() {
     mpu.initialize();
     devStatus = mpu.dmpInitialize();
     /*
-     *  -1422  2175  971   73    2     29
-     *  Your offsets:  -1444 2220  983 73  5 21
 
+     *  -1370  2210  971  75    6       21
         acelX acelY acelZ giroX giroY giroZ
 
      */
-    mpu.setXGyroOffset(73); 
-    mpu.setYGyroOffset(5);
+    mpu.setXGyroOffset(75); 
+    mpu.setYGyroOffset(6);
     mpu.setZGyroOffset(21);
-    mpu.setXAccelOffset(-1444); 
-    mpu.setYAccelOffset(2220); 
-    mpu.setZAccelOffset(983); 
+    mpu.setXAccelOffset(-1370); 
+    mpu.setYAccelOffset(2210); 
+    mpu.setZAccelOffset(971); 
   
     if (devStatus == 0) {
         // turn on the DMP, now that it's ready
@@ -204,8 +203,10 @@ void loop() {
     }
 
     //Kalman German Begin
-    
+   /* 
     mpu.getAcceleration(&ax, &ay, &az);
+
+    
     
     acce_x_medida = (double) ax* (9.81/16384.0);
     acce_y_medida = (double) ay* (9.81/16384.0);
@@ -220,25 +221,29 @@ void loop() {
     acce_z_filtrado = filtroZ.getFilteredValue(acce_z_medida);
     Serial.print("X =[");
     Serial.print(acce_x_medida);
-    Serial.print("]-[");
-    Serial.print(acce_x_filtrado);
+   // Serial.print("]-[");
+   // Serial.print(acce_x_filtrado);
     Serial.print("] , Y =[");
     Serial.print(acce_y_medida);
-    Serial.print("]-[");
-    Serial.print(acce_y_filtrado);
+   // Serial.print("]-[");
+   // Serial.print(acce_y_filtrado);
     Serial.print("] , Z =[");
     Serial.print(acce_z_medida);
-    Serial.print("]-[");
-    Serial.print(acce_z_filtrado);
+    //Serial.print("]-[");
+   // Serial.print(acce_z_filtrado);
     Serial.print("] , tiempo Kalman dx= [");
     Serial.print(tiempo_dx);
     Serial.print("], Tiempo desde que se prendio [");
     Serial.print(micros());
+ 
     Serial.print("]\n");
-    
+   
 
     //Kalman German End
-
+   */ 
+    
+    
+    
     
     // Configuraciones del acelerometro, Funca no tocar >:( 
     delay(50); 
@@ -270,8 +275,7 @@ void loop() {
     dt = t_actual-t_anterior; //delta tiempo
 
     
-    mpu.getAcceleration(&ax, &ay, &az);
-    
+    mpu.getAcceleration(&ax, &ay, &az); 
     //Filtro para el ruido
     if(ax>(-500) && ax<(500))
       ax=0;
@@ -288,11 +292,6 @@ void loop() {
     acceleracion_actual_x = ax * (9.81/16384.0);
     acceleracion_actual_y = ay * (9.81/16384.0);
     gravedad = az * (9.81/16384.0);
-  
-    radio = sqrt(acceleracion_actual_x*acceleracion_actual_x +acceleracion_actual_y*acceleracion_actual_y); // obtengo el radio 
-    
-    acceleracion_actual_x = radio*cos(euler[0]); 
-    acceleracion_actual_y = radio*sin(euler[0]);
     
     vel_x_anterior=vel_x;
     vel_y_anterior=vel_y;
@@ -309,8 +308,6 @@ void loop() {
     Serial.print(acceleracion_actual_x);
     Serial.print(" , ");
     Serial.print(acceleracion_actual_y);
-    Serial.print(" , ");
-    Serial.print(gravedad);
     Serial.print(" ) , (radio,º) ( ");
     Serial.print(radio);
     Serial.print(" , ");
