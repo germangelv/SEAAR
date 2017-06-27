@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.example.juanpablo.autitoarduino">
+
+    <uses-feature android:name="android.hardware.bluetooth" />
+
+    <!--
+      A fin de usar las funciones de Bluetooth en tu aplicación, debes declarar el permiso de Bluetooth BLUETOOTH.
+      Necesitas este permiso para establecer cualquier comunicación de Bluetooth, como solicitar o aceptar una
+      conexión y transferir datos.
+      Si deseas que tu app inicie la detección de dispositivos o controle los ajustes de Bluetooth,
+      también debes declarar el permiso BLUETOOTH_ADMIN . La mayoría de las aplicaciones necesitan este
+      permiso solamente para poder ver dispositivos Bluetooth locales. Las demás funciones que otorga
+      este permiso no deben usarse, a menos que la aplicación sea un “administrador de energía”
+      que modifique los ajustes de Bluetooth a pedido del usuario. Nota: si usas el permiso BLUETOOTH_ADMIN,
+      también debes contar con el permiso BLUETOOTH.
+     -->
+
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.BLUETOOTH_PRIVILEGED" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+        <activity android:name=".MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+    </application>
+
+</manifest>

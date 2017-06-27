@@ -1,0 +1,7 @@
+#Sat Jun 24 21:07:27 ART 2017
+base.0=C\:\\MisAplicaciones\\AppV5.5\\AutitoArduino\\app\\build\\intermediates\\transforms\\dex\\debug\\folders\\1000\\10000\\instant-run_588a681c98d302844621a5340c9497efb7046899
+renamed.1=classes.dex
+renamed.0=classes2.dex
+file.1=C\:\\MisAplicaciones\\AppV5.5\\AutitoArduino\\app\\build\\intermediates\\transforms\\dex\\debug\\folders\\1000\\10000\\instant-run-bootstrap_660ff67ce12cec0a659f70e9d56448e0d1952142\\classes.dex
+base.1=C\:\\MisAplicaciones\\AppV5.5\\AutitoArduino\\app\\build\\intermediates\\transforms\\dex\\debug\\folders\\1000\\10000\\instant-run-bootstrap_660ff67ce12cec0a659f70e9d56448e0d1952142
+file.0=C\:\\MisAplicaciones\\AppV5.5\\AutitoArduino\\app\\build\\intermediates\\transforms\\dex\\debug\\folders\\1000\\10000\\instant-run_588a681c98d302844621a5340c9497efb7046899\\classes.dex

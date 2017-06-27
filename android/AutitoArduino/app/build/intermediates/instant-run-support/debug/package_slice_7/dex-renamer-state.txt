@@ -1,0 +1,4 @@
+#Sat Jun 24 21:07:27 ART 2017
+base.0=C\:\\MisAplicaciones\\AppV5.5\\AutitoArduino\\app\\build\\intermediates\\transforms\\dex\\debug\\folders\\1000\\5\\slice_7
+renamed.0=classes.dex
+file.0=C\:\\MisAplicaciones\\AppV5.5\\AutitoArduino\\app\\build\\intermediates\\transforms\\dex\\debug\\folders\\1000\\5\\slice_7\\classes.dex

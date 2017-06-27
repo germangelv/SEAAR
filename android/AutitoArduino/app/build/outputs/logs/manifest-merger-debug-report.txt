@@ -1,0 +1,111 @@
+-- Merging decision tree log ---
+manifest
+ADDED from C:\MisAplicaciones\AppV6\AutitoArduino\app\src\main\AndroidManifest.xml:2:1-41:12
+	package
+		ADDED from C:\MisAplicaciones\AppV6\AutitoArduino\app\src\main\AndroidManifest.xml:3:5-50
+		INJECTED from C:\MisAplicaciones\AppV6\AutitoArduino\app\src\main\AndroidManifest.xml
+		INJECTED from C:\MisAplicaciones\AppV6\AutitoArduino\app\src\main\AndroidManifest.xml
+	android:versionName
+		INJECTED from C:\MisAplicaciones\AppV6\AutitoArduino\app\src\main\AndroidManifest.xml
+		INJECTED from C:\MisAplicaciones\AppV6\AutitoArduino\app\src\main\AndroidManifest.xml
+	xmlns:android
+		ADDED from C:\MisAplicaciones\AppV6\AutitoArduino\app\src\main\AndroidManifest.xml:2:11-69
+	android:versionCode
+		INJECTED from C:\MisAplicaciones\AppV6\AutitoArduino\app\src\main\AndroidManifest.xml
+		INJECTED from C:\MisAplicaciones\AppV6\AutitoArduino\app\src\main\AndroidManifest.xml
+uses-feature#android.hardware.bluetooth
+ADDED from C:\MisAplicaciones\AppV6\AutitoArduino\app\src\main\AndroidManifest.xml:5:5-63
+	android:name
+		ADDED from C:\MisAplicaciones\AppV6\AutitoArduino\app\src\main\AndroidManifest.xml:5:19-60
+uses-permission#android.permission.BLUETOOTH
+ADDED from C:\MisAplicaciones\AppV6\AutitoArduino\app\src\main\AndroidManifest.xml:19:5-68
+	android:name
+		ADDED from C:\MisAplicaciones\AppV6\AutitoArduino\app\src\main\AndroidManifest.xml:19:22-65
+uses-permission#android.permission.BLUETOOTH_ADMIN
+ADDED from C:\MisAplicaciones\AppV6\AutitoArduino\app\src\main\AndroidManifest.xml:20:5-74
+	android:name
+		ADDED from C:\MisAplicaciones\AppV6\AutitoArduino\app\src\main\AndroidManifest.xml:20:22-71
+uses-permission#android.permission.ACCESS_COARSE_LOCATION
+ADDED from C:\MisAplicaciones\AppV6\AutitoArduino\app\src\main\AndroidManifest.xml:21:5-81
+	android:name
+		ADDED from C:\MisAplicaciones\AppV6\AutitoArduino\app\src\main\AndroidManifest.xml:21:22-78
+uses-permission#android.permission.ACCESS_FINE_LOCATION
+ADDED from C:\MisAplicaciones\AppV6\AutitoArduino\app\src\main\AndroidManifest.xml:22:5-79
+	android:name
+		ADDED from C:\MisAplicaciones\AppV6\AutitoArduino\app\src\main\AndroidManifest.xml:22:22-76
+uses-permission#android.permission.BLUETOOTH_PRIVILEGED
+ADDED from C:\MisAplicaciones\AppV6\AutitoArduino\app\src\main\AndroidManifest.xml:23:5-79
+	android:name
+		ADDED from C:\MisAplicaciones\AppV6\AutitoArduino\app\src\main\AndroidManifest.xml:23:22-76
+application
+ADDED from C:\MisAplicaciones\AppV6\AutitoArduino\app\src\main\AndroidManifest.xml:25:5-39:19
+MERGED from [com.android.support:appcompat-v7:25.3.1] C:\Users\Juan Pablo\.android\build-cache\2f885df00515128043f8c2760dd9e1a1b9d040dd\output\AndroidManifest.xml:29:5-20
+MERGED from [com.android.support:support-v4:25.3.1] C:\Users\Juan Pablo\.android\build-cache\261b581ffaab6a658becb5aef2de21d3d32467db\output\AndroidManifest.xml:29:5-20
+MERGED from [com.android.support:support-fragment:25.3.1] C:\Users\Juan Pablo\.android\build-cache\f2a87a10fbb7f24a6d40f21652017420623b051a\output\AndroidManifest.xml:29:5-20
+MERGED from [com.android.support:support-media-compat:25.3.1] C:\Users\Juan Pablo\.android\build-cache\00b22ffb994df033fac1e395e9d7586781c3243f\output\AndroidManifest.xml:29:5-20
+MERGED from [com.android.support:support-core-ui:25.3.1] C:\Users\Juan Pablo\.android\build-cache\bfd73eaddad01821501808a49265af3d0087c588\output\AndroidManifest.xml:29:5-20
+MERGED from [com.android.support:support-core-utils:25.3.1] C:\Users\Juan Pablo\.android\build-cache\31de00202e7dcd29605af7ae28abf3ecd44885a8\output\AndroidManifest.xml:29:5-20
+MERGED from [com.android.support:animated-vector-drawable:25.3.1] C:\Users\Juan Pablo\.android\build-cache\b1b91bd34e16dcf6c7c8c53604128a9b3b3616b8\output\AndroidManifest.xml:26:5-20
+MERGED from [com.android.support:support-vector-drawable:25.3.1] C:\Users\Juan Pablo\.android\build-cache\1fbdc96fa42b4bee5d6c688f173492d6fc16963e\output\AndroidManifest.xml:26:5-20
+MERGED from [com.android.support:support-compat:25.3.1] C:\Users\Juan Pablo\.android\build-cache\f1dc4b7cec02a2cea301e7466de94e5fee5126df\output\AndroidManifest.xml:29:5-20
+MERGED from [com.android.support.constraint:constraint-layout:1.0.2] C:\Users\Juan Pablo\.android\build-cache\9aa8d47dc5e30c31c1d7364d6bcea0a0329c9b16\output\AndroidManifest.xml:9:5-20
+	android:label
+		ADDED from C:\MisAplicaciones\AppV6\AutitoArduino\app\src\main\AndroidManifest.xml:28:9-41
+	android:supportsRtl
+		ADDED from C:\MisAplicaciones\AppV6\AutitoArduino\app\src\main\AndroidManifest.xml:30:9-35
+	android:roundIcon
+		ADDED from C:\MisAplicaciones\AppV6\AutitoArduino\app\src\main\AndroidManifest.xml:29:9-54
+	android:allowBackup
+		ADDED from C:\MisAplicaciones\AppV6\AutitoArduino\app\src\main\AndroidManifest.xml:26:9-35
+	android:icon
+		ADDED from C:\MisAplicaciones\AppV6\AutitoArduino\app\src\main\AndroidManifest.xml:27:9-43
+	android:theme
+		ADDED from C:\MisAplicaciones\AppV6\AutitoArduino\app\src\main\AndroidManifest.xml:31:9-40
+activity#com.example.juanpablo.autitoarduino.MainActivity
+ADDED from C:\MisAplicaciones\AppV6\AutitoArduino\app\src\main\AndroidManifest.xml:32:9-38:20
+	android:name
+		ADDED from C:\MisAplicaciones\AppV6\AutitoArduino\app\src\main\AndroidManifest.xml:32:19-47
+intent-filter#android.intent.action.MAIN+android.intent.category.LAUNCHER
+ADDED from C:\MisAplicaciones\AppV6\AutitoArduino\app\src\main\AndroidManifest.xml:33:13-37:29
+action#android.intent.action.MAIN
+ADDED from C:\MisAplicaciones\AppV6\AutitoArduino\app\src\main\AndroidManifest.xml:34:17-69
+	android:name
+		ADDED from C:\MisAplicaciones\AppV6\AutitoArduino\app\src\main\AndroidManifest.xml:34:25-66
+category#android.intent.category.LAUNCHER
+ADDED from C:\MisAplicaciones\AppV6\AutitoArduino\app\src\main\AndroidManifest.xml:36:17-77
+	android:name
+		ADDED from C:\MisAplicaciones\AppV6\AutitoArduino\app\src\main\AndroidManifest.xml:36:27-74
+uses-sdk
+INJECTED from C:\MisAplicaciones\AppV6\AutitoArduino\app\src\main\AndroidManifest.xml reason: use-sdk injection requested
+MERGED from [com.android.support:appcompat-v7:25.3.1] C:\Users\Juan Pablo\.android\build-cache\2f885df00515128043f8c2760dd9e1a1b9d040dd\output\AndroidManifest.xml:21:5-23:78
+MERGED from [com.android.support:support-v4:25.3.1] C:\Users\Juan Pablo\.android\build-cache\261b581ffaab6a658becb5aef2de21d3d32467db\output\AndroidManifest.xml:21:5-23:54
+MERGED from [com.android.support:support-fragment:25.3.1] C:\Users\Juan Pablo\.android\build-cache\f2a87a10fbb7f24a6d40f21652017420623b051a\output\AndroidManifest.xml:21:5-23:60
+MERGED from [com.android.support:support-media-compat:25.3.1] C:\Users\Juan Pablo\.android\build-cache\00b22ffb994df033fac1e395e9d7586781c3243f\output\AndroidManifest.xml:21:5-23:63
+MERGED from [com.android.support:support-core-ui:25.3.1] C:\Users\Juan Pablo\.android\build-cache\bfd73eaddad01821501808a49265af3d0087c588\output\AndroidManifest.xml:21:5-23:58
+MERGED from [com.android.support:support-core-utils:25.3.1] C:\Users\Juan Pablo\.android\build-cache\31de00202e7dcd29605af7ae28abf3ecd44885a8\output\AndroidManifest.xml:21:5-23:61
+MERGED from [com.android.support:animated-vector-drawable:25.3.1] C:\Users\Juan Pablo\.android\build-cache\b1b91bd34e16dcf6c7c8c53604128a9b3b3616b8\output\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-vector-drawable:25.3.1] C:\Users\Juan Pablo\.android\build-cache\1fbdc96fa42b4bee5d6c688f173492d6fc16963e\output\AndroidManifest.xml:20:5-43
+MERGED from [com.android.support:support-compat:25.3.1] C:\Users\Juan Pablo\.android\build-cache\f1dc4b7cec02a2cea301e7466de94e5fee5126df\output\AndroidManifest.xml:21:5-23:58
+MERGED from [com.android.support.constraint:constraint-layout:1.0.2] C:\Users\Juan Pablo\.android\build-cache\9aa8d47dc5e30c31c1d7364d6bcea0a0329c9b16\output\AndroidManifest.xml:5:5-7:41
+	tools:overrideLibrary
+		ADDED from [com.android.support:appcompat-v7:25.3.1] C:\Users\Juan Pablo\.android\build-cache\2f885df00515128043f8c2760dd9e1a1b9d040dd\output\AndroidManifest.xml:23:9-75
+	android:targetSdkVersion
+		INJECTED from C:\MisAplicaciones\AppV6\AutitoArduino\app\src\main\AndroidManifest.xml
+		INJECTED from C:\MisAplicaciones\AppV6\AutitoArduino\app\src\main\AndroidManifest.xml
+	android:minSdkVersion
+		INJECTED from C:\MisAplicaciones\AppV6\AutitoArduino\app\src\main\AndroidManifest.xml
+		INJECTED from C:\MisAplicaciones\AppV6\AutitoArduino\app\src\main\AndroidManifest.xml
+meta-data#android.support.VERSION
+ADDED from [com.android.support:appcompat-v7:25.3.1] C:\Users\Juan Pablo\.android\build-cache\2f885df00515128043f8c2760dd9e1a1b9d040dd\output\AndroidManifest.xml:25:5-27:34
+MERGED from [com.android.support:support-v4:25.3.1] C:\Users\Juan Pablo\.android\build-cache\261b581ffaab6a658becb5aef2de21d3d32467db\output\AndroidManifest.xml:25:5-27:34
+MERGED from [com.android.support:support-fragment:25.3.1] C:\Users\Juan Pablo\.android\build-cache\f2a87a10fbb7f24a6d40f21652017420623b051a\output\AndroidManifest.xml:25:5-27:34
+MERGED from [com.android.support:support-media-compat:25.3.1] C:\Users\Juan Pablo\.android\build-cache\00b22ffb994df033fac1e395e9d7586781c3243f\output\AndroidManifest.xml:25:5-27:34
+MERGED from [com.android.support:support-core-ui:25.3.1] C:\Users\Juan Pablo\.android\build-cache\bfd73eaddad01821501808a49265af3d0087c588\output\AndroidManifest.xml:25:5-27:34
+MERGED from [com.android.support:support-core-utils:25.3.1] C:\Users\Juan Pablo\.android\build-cache\31de00202e7dcd29605af7ae28abf3ecd44885a8\output\AndroidManifest.xml:25:5-27:34
+MERGED from [com.android.support:animated-vector-drawable:25.3.1] C:\Users\Juan Pablo\.android\build-cache\b1b91bd34e16dcf6c7c8c53604128a9b3b3616b8\output\AndroidManifest.xml:22:5-24:34
+MERGED from [com.android.support:support-vector-drawable:25.3.1] C:\Users\Juan Pablo\.android\build-cache\1fbdc96fa42b4bee5d6c688f173492d6fc16963e\output\AndroidManifest.xml:22:5-24:34
+MERGED from [com.android.support:support-compat:25.3.1] C:\Users\Juan Pablo\.android\build-cache\f1dc4b7cec02a2cea301e7466de94e5fee5126df\output\AndroidManifest.xml:25:5-27:34
+	android:value
+		ADDED from [com.android.support:appcompat-v7:25.3.1] C:\Users\Juan Pablo\.android\build-cache\2f885df00515128043f8c2760dd9e1a1b9d040dd\output\AndroidManifest.xml:27:9-31
+	android:name
+		ADDED from [com.android.support:appcompat-v7:25.3.1] C:\Users\Juan Pablo\.android\build-cache\2f885df00515128043f8c2760dd9e1a1b9d040dd\output\AndroidManifest.xml:26:9-47
