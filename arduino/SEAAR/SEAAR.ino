@@ -83,9 +83,7 @@ Kalman filtroX(0.125,32,1023,0);
 Kalman filtroX(0.125,10,1024,0);
 Kalman filtroY(0.125,10,1024,0);
 Kalman filtroZ(0.125,10,1024,9.8);
-double acce_x_filtrado, acce_y_filtrado, acce_z_filtrado, acce_x_medida, acce_y_medida, acce_z_medida;
-double tiempo_antes_x, tiempo_despues_x, tiempo_dx;
-
+double ax_fil, ay_fil, az_fil;
 // MPU control/status vars
 bool dmpReady = false;  // set true if DMP init was successful
 uint8_t mpuIntStatus;   // holds actual interrupt status byte from MPU
@@ -128,12 +126,6 @@ void setup() {
     while (!Serial); // wait for Leonardo enumeration, others continue immediately
     mpu.initialize();
     devStatus = mpu.dmpInitialize();
-    /*
-
-     *  -1370  2210  971  75    6       21
-        acelX acelY acelZ giroX giroY giroZ
-
-     */
     mpu.setXGyroOffset(75); 
     mpu.setYGyroOffset(6);
     mpu.setZGyroOffset(21);
@@ -200,50 +192,7 @@ void loop() {
      // mostrar();
      // deteccion_de_obstaculos();
       movimiento();       
-    }
-
-    //Kalman German Begin
-   /* 
-    mpu.getAcceleration(&ax, &ay, &az);
-
-    
-    
-    acce_x_medida = (double) ax* (9.81/16384.0);
-    acce_y_medida = (double) ay* (9.81/16384.0);
-    acce_z_medida = (double) az* (9.81/16384.0);
-
-    tiempo_antes_x = micros();
-    acce_x_filtrado = filtroX.getFilteredValue(acce_x_medida);
-    tiempo_despues_x = micros();
-    
-    tiempo_dx=tiempo_despues_x-tiempo_antes_x;
-    acce_y_filtrado = filtroY.getFilteredValue(acce_y_medida);
-    acce_z_filtrado = filtroZ.getFilteredValue(acce_z_medida);
-    Serial.print("X =[");
-    Serial.print(acce_x_medida);
-   // Serial.print("]-[");
-   // Serial.print(acce_x_filtrado);
-    Serial.print("] , Y =[");
-    Serial.print(acce_y_medida);
-   // Serial.print("]-[");
-   // Serial.print(acce_y_filtrado);
-    Serial.print("] , Z =[");
-    Serial.print(acce_z_medida);
-    //Serial.print("]-[");
-   // Serial.print(acce_z_filtrado);
-    Serial.print("] , tiempo Kalman dx= [");
-    Serial.print(tiempo_dx);
-    Serial.print("], Tiempo desde que se prendio [");
-    Serial.print(micros());
- 
-    Serial.print("]\n");
-   
-
-    //Kalman German End
-   */ 
-    
-    
-    
+    } 
     
     // Configuraciones del acelerometro, Funca no tocar >:( 
     delay(50); 
@@ -265,17 +214,14 @@ void loop() {
     fifoCount -= packetSize;
     mpu.dmpGetQuaternion(&q, fifoBuffer);
     mpu.dmpGetEuler(euler, &q); // en la posicion 0 del euler esta el angulo en radianes de eje x^y (osea visto desde arriba, seria el Z) 
-
- 
     // DE ACA PARA ABAJO TOCAR: 
     // aca deberia estar el calculo correcto para obtener la posi
     delay(100);
     t_anterior = t_actual;
     t_actual = (float)micros()/1000000;
-    dt = t_actual-t_anterior; //delta tiempo
-
-    
-    mpu.getAcceleration(&ax, &ay, &az); 
+    dt = t_actual-t_anterior; //delta tiempo (x,y,z) 
+    mpu.getAcceleration(&ax, &ay, &az);  // f(x,y,z)
+    mpu.dmpGetGravity(&gravity, &q);
     //Filtro para el ruido
     if(ax>(-500) && ax<(500))
       ax=0;
@@ -283,46 +229,20 @@ void loop() {
       ay=0;
     if(az>(-200) && az<(200))
       az=0;
-  
-    //aca flashee:
-    
-    acceleracion_anterior_x = acceleracion_actual_x;
-    acceleracion_anterior_y = acceleracion_actual_y;
-    
-    acceleracion_actual_x = ax * (9.81/16384.0);
-    acceleracion_actual_y = ay * (9.81/16384.0);
-    gravedad = az * (9.81/16384.0);
-    
-    vel_x_anterior=vel_x;
-    vel_y_anterior=vel_y;
-    
-    pos_x_anterior=pos_x;
-    pos_y_anterior=pos_y;
-  
-    vel_x=vel_x_anterior+(dt)*acceleracion_actual_x;
-    vel_y=vel_y_anterior+(dt)*acceleracion_actual_y;
-    pos_x=pos_x_anterior+0.5*(dt*dt)*vel_x;
-    pos_y=pos_y_anterior+0.5*(dt*dt)*vel_y;
-  
-    Serial.print("(ax ay az↓)  ( ");
-    Serial.print(acceleracion_actual_x);
-    Serial.print(" , ");
-    Serial.print(acceleracion_actual_y);
-    Serial.print(" ) , (radio,º) ( ");
-    Serial.print(radio);
-    Serial.print(" , ");
-    Serial.print(euler[0]);
-    Serial.print(" ) , ( vel_x vel_y ) ( ");
-    Serial.print(vel_x);
-    Serial.print(" , ");
-    Serial.print(vel_y);
-    Serial.print(" ) ");
-  
-    Serial.print(" (x y) ( ");
-    Serial.print(pos_x);
-    Serial.print(" , ");
-    Serial.print(pos_y);
-    Serial.println(" )   \n");
+      
+    ax_fil = (double) ax* (9.81/16384.0);
+    ay_fil = (double) ay* (9.81/16384.0);
+    az_fil = (double) az* (9.81/16384.0);
+    ax_fil = filtroX.getFilteredValue(ax_fil);
+    ay_fil = filtroY.getFilteredValue(ay_fil);
+    az_fil = filtroZ.getFilteredValue(az_fil); // f(x,y,z) filtrado por kalman 
+   
+    Serial.print(ax_fil);Serial.print(" ");
+    Serial.print(ay_fil);Serial.print(" ");
+    Serial.print(az_fil);Serial.println();
+    Serial.print(euler[0]);Serial.println();
+    // ∫∫ f(x,y,z) filtrado dx dy dz 
+ 
    }
 }
 
@@ -447,11 +367,6 @@ void cambiarVelocidad(){
 }
 
 void mostrar(){
-    /*Serial.print(q.w);
-      Serial.print(",");
-      Serial.print(q.x);
-      Serial.print(",");
-      Serial.print(q.y);*/
       Serial.print("( ");
       Serial.print(euler[0]);
       Serial.print(" , ");
@@ -461,9 +376,73 @@ void mostrar(){
       Serial.print(" , "); 
       Serial.print(aaWorld.z);
       Serial.println(" )");    
-    
 }
 
+void meansensors(){
+  long i=0,buff_ax=0,buff_ay=0,buff_az=0,buff_gx=0,buff_gy=0,buff_gz=0;
 
+  while (i<(buffersize+101)){
+    // read raw accel/gyro measurements from device
+    accelgyro.getMotion6(&ax, &ay, &az, &gx, &gy, &gz);
+    
+    if (i>100 && i<=(buffersize+100)){ //First 100 measures are discarded
+      buff_ax=buff_ax+ax;
+      buff_ay=buff_ay+ay;
+      buff_az=buff_az+az;
+      buff_gx=buff_gx+gx;
+      buff_gy=buff_gy+gy;
+      buff_gz=buff_gz+gz;
+    }
+    if (i==(buffersize+100)){
+      mean_ax=buff_ax/buffersize;
+      mean_ay=buff_ay/buffersize;
+      mean_az=buff_az/buffersize;
+      mean_gx=buff_gx/buffersize;
+      mean_gy=buff_gy/buffersize;
+      mean_gz=buff_gz/buffersize;
+    }
+    i++;
+    delay(2); //Needed so we don't get repeated measures
+  }
+}
+void calibration(){
+  ax_offset=-mean_ax/8;
+  ay_offset=-mean_ay/8;
+  az_offset=(16384-mean_az)/8;
 
+  gx_offset=-mean_gx/4;
+  gy_offset=-mean_gy/4;
+  gz_offset=-mean_gz/4;
+  while (1){
+    int ready=0;
+    accelgyro.setXAccelOffset(ax_offset);
+    accelgyro.setYAccelOffset(ay_offset);
+    accelgyro.setZAccelOffset(az_offset);
 
+    accelgyro.setXGyroOffset(gx_offset);
+    accelgyro.setYGyroOffset(gy_offset);
+    accelgyro.setZGyroOffset(gz_offset);
+
+    meansensors();
+
+    if (abs(mean_ax)<=acel_deadzone) ready++;
+    else ax_offset=ax_offset-mean_ax/acel_deadzone;
+
+    if (abs(mean_ay)<=acel_deadzone) ready++;
+    else ay_offset=ay_offset-mean_ay/acel_deadzone;
+
+    if (abs(16384-mean_az)<=acel_deadzone) ready++;
+    else az_offset=az_offset+(16384-mean_az)/acel_deadzone;
+
+    if (abs(mean_gx)<=giro_deadzone) ready++;
+    else gx_offset=gx_offset-mean_gx/(giro_deadzone+1);
+
+    if (abs(mean_gy)<=giro_deadzone) ready++;
+    else gy_offset=gy_offset-mean_gy/(giro_deadzone+1);
+
+    if (abs(mean_gz)<=giro_deadzone) ready++;
+    else gz_offset=gz_offset-mean_gz/(giro_deadzone+1);
+
+    if (ready==6) break;
+  }
+}
