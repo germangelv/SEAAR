@@ -20,8 +20,8 @@
 #define LED_MARCHA_ATRAS    8     //Pin 08 LED de atras
 #define MOTOR_TRACCION      9     //Pin 09 Motor hacia adelante
 #define MOTOR_TRACCION_R    10    //Pin 10 Motor hacia atras
-#define P_ECHO_A            11    //Pin 11 como (P_ECHO PWM ) para el Ultrasonido Trasero
-#define P_TRIGGER_A         12    //Pin 12 como (P_TRIGGER_) para el Ultrasonido Trasero
+#define P_TRIGGER_A         11    //Pin 12 como (P_TRIGGER_) para el Ultrasonido Trasero
+#define P_ECHO_A            12    //Pin 11 como (P_ECHO PWM ) para el Ultrasonido Trasero
 #define LED_PIN             13    //Pin Led Arduino
 
 //CONSTANTES
