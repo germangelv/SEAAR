@@ -83,7 +83,9 @@ Kalman filtroX(0.125,32,1023,0);
 Kalman filtroX(0.125,10,1024,0);
 Kalman filtroY(0.125,10,1024,0);
 Kalman filtroZ(0.125,10,1024,9.8);
-double ax_fil, ay_fil, az_fil;
+double ax_fil, ay_fil, az_fil, a_modulo;
+
+
 // MPU control/status vars
 bool dmpReady = false;  // set true if DMP init was successful
 uint8_t mpuIntStatus;   // holds actual interrupt status byte from MPU
@@ -126,12 +128,14 @@ void setup() {
     while (!Serial); // wait for Leonardo enumeration, others continue immediately
     mpu.initialize();
     devStatus = mpu.dmpInitialize();
-    mpu.setXGyroOffset(75); 
-    mpu.setYGyroOffset(6);
-    mpu.setZGyroOffset(21);
-    mpu.setXAccelOffset(-1370); 
-    mpu.setYAccelOffset(2210); 
-    mpu.setZAccelOffset(971); 
+    
+    //Your offsets:  -1408 2160  966 68  9 25
+    mpu.setXGyroOffset(68); 
+    mpu.setYGyroOffset(9);
+    mpu.setZGyroOffset(25);
+    mpu.setXAccelOffset(-1408); 
+    mpu.setYAccelOffset(2160); 
+    mpu.setZAccelOffset(966); 
   
     if (devStatus == 0) {
         // turn on the DMP, now that it's ready
@@ -171,7 +175,6 @@ void setup() {
     pinMode(MOTOR_TRACCION_R, OUTPUT);  
       
     pinMode(LED_PIN, OUTPUT);
-
 }
 
 
@@ -229,7 +232,8 @@ void loop() {
       ay=0;
     if(az>(-200) && az<(200))
       az=0;
-      
+    acceleracion_anterior_y = ay_fil;
+    acceleracion_anterior_x = ax_fil;
     ax_fil = (double) ax* (9.81/16384.0);
     ay_fil = (double) ay* (9.81/16384.0);
     az_fil = (double) az* (9.81/16384.0);
@@ -237,12 +241,59 @@ void loop() {
     ay_fil = filtroY.getFilteredValue(ay_fil);
     az_fil = filtroZ.getFilteredValue(az_fil); // f(x,y,z) filtrado por kalman 
    
-    Serial.print(ax_fil);Serial.print(" ");
-    Serial.print(ay_fil);Serial.print(" ");
-    Serial.print(az_fil);Serial.println();
-    Serial.print(euler[0]);Serial.println();
+   // Serial.print(ax_fil);Serial.print(" ");
+   // Serial.print(az_fil);Serial.println();
+   // Serial.print(euler[0]);Serial.println();
     // ∫∫ f(x,y,z) filtrado dx dy dz 
- 
+    vel_y += 0.5*dt*(ay_fil+acceleracion_anterior_y);
+    pos_y += 0.5*dt*(vel_y+vel_y_anterior);
+    vel_x += 0.5*dt*(ax_fil+acceleracion_anterior_x);
+    pos_x += 0.5*dt*(vel_x+vel_x_anterior);
+
+/*
+ * codigo rancio asi no era dani
+    ax_fil = ax_fil + sin( euler[1]) * az_fil ;
+
+    ay_fil = ay_fil + sin( euler[2])  * az_fil;
+
+    if (ax_fil = 0xFFFFFFFF)
+      ax_fil = 0;
+
+    if (ay_fil = 0xFFFFFFFF)
+      ax_fil = 0;
+
+
+          
+    a_modulo = sqrt ( ax_fil*ax_fil + ay_fil*ay_fil + az_fil*az_fil );
+    ax_fil = ax_fil + sin( euler[1]) * a_modulo ;
+
+    ay_fil = ay_fil + sin( euler[2]) * a_modulo;
+
+    */
+
+    
+    a_modulo = sqrt ( ax*ax + ay*ay + az*az );
+    ax_fil = ax + sin( euler[1]) * a_modulo ;
+
+    ay_fil = ay_fil + sin( euler[2]) * a_modulo;
+
+
+    Serial.print("raw_x: ");Serial.print(ax);
+    Serial.print(" raw_y: ");Serial.print(ay);
+    Serial.print(" raw_z: ");Serial.print(az);
+    Serial.print(" modulo: ");Serial.print(a_modulo);
+
+    /*
+    Serial.print(" Acc_x: ");Serial.print(ax_fil);
+    Serial.print(" Vel_x: ");Serial.print(vel_x);
+    Serial.print(" Pos_x: ");Serial.print(pos_x);
+    
+    Serial.print(" Acc_y: ");Serial.print(ay_fil);
+    Serial.print(" Vel_y: ");Serial.print(vel_y);
+    Serial.print(" Pos_y: ");Serial.print(pos_y);
+    */
+    Serial.print(" Angulo: °");Serial.print(euler[0]);
+    Serial.println();
    }
 }
 
@@ -377,7 +428,7 @@ void mostrar(){
       Serial.print(aaWorld.z);
       Serial.println(" )");    
 }
-
+/*
 void meansensors(){
   long i=0,buff_ax=0,buff_ay=0,buff_az=0,buff_gx=0,buff_gy=0,buff_gz=0;
 
@@ -446,3 +497,4 @@ void calibration(){
     if (ready==6) break;
   }
 }
+*/
