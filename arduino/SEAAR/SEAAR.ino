@@ -35,9 +35,9 @@
 #define DOBLAR_IZQUIERDA 'a'
 #define APAGAR 'o'
 #define ENCENDER 'f'
-#define LENTO 'h'
+#define LENTO 'h' // sin uso
 #define NORMAL 'j'
-#define RAPIDO 'k'
+#define RAPIDO 'k' // sin uso
 #define MAX_VELOCIDAD 'l'
 
 //Velocidades 
@@ -354,19 +354,19 @@ void movimiento(){
         analogWrite(MOTOR_DIR_R, 0);
         analogWrite(MOTOR_DIR, 0);
         break;
-       case LENTO:
+      /* case LENTO:
           velocidad = VEL_LENTO;
           cambiarVelocidad();
           break;
-      case NORMAL:
+     */ case NORMAL:
           velocidad = VEL_NORMAL;
           cambiarVelocidad();
           break;
-      case RAPIDO:
+     /* case RAPIDO:
           velocidad = VEL_RAPIDO;
           cambiarVelocidad();
           break;
-      case MAX_VELOCIDAD:
+     */ case MAX_VELOCIDAD:
           velocidad = VEL_MAX;
           cambiarVelocidad();
           break;
