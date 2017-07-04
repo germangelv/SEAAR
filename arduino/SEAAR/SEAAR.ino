@@ -1,7 +1,7 @@
 #include "Wire.h"
 #include <Servo.h>
 #include <Ultrasonic.h>                
-
+#include <Streaming.h>
 
 // PINES:
 //0 y 1 para tx y rx del bluetooth
@@ -32,9 +32,9 @@
 #define ENDEREZAR 'x'
 #define APAGAR 'o'
 #define ENCENDER 'f'
-#define MAX_VELOCIDAD 'l'
-#define OSCURO ''
-#define CLARO ''
+#define MAX_VELOCIDAD 'j'
+#define OSCURO 'l'
+#define CLARO 'k'
 //Velocidades 
 #define VEL_NORMAL 100
 #define VEL_MAX 150   
@@ -79,7 +79,7 @@ void setup() {
     pinMode(LED_PIN, OUTPUT);
 }
 
-
+float x,y;
 void loop() {
     // lee el bluetooth y almacena en estado
     if (Serial.available() > 0) {    
@@ -91,19 +91,28 @@ void loop() {
       
     // Si esta prendido muestro la info y hago la detecion de obstaculos y veo las peticiones de movimiento.
     if( encendido ) { 
-     // mostrar();
       deteccion_de_obstaculos();
-      movimiento();       
-    } 
+      movimiento();   
+    //  determinar_pos();
+      mostrar();    
+    } else{
+  //    restablecer_pos();
+    }
 }
 
-
+/*determinar_pos(){
+  //magia potagia
+}
+restablecer_pos(){
+    //restableser todas las variables para que quede en pos( 0 0 )
+   }
+*/    
 void movimiento(){
    switch(estado){
       case APAGAR:  //Boton apagar
         analogWrite(MOTOR_TRACCION_R, 0);
         analogWrite(MOTOR_TRACCION, 0);
-        servoMotor.write(0);
+        servoMotor.write(80);
         analogWrite(LED_MARCHA_ADELANTE, LOW);
         analogWrite(LED_MARCHA_ATRAS, LOW);
         encendido = false;
@@ -151,15 +160,15 @@ void movimiento(){
         break;
         
       case DOBLAR_DERECHA: // Boton derecha
-        servoMotor.write(0); //angulo
+        servoMotor.write(45); //angulo
         break;  
         
       case ENDEREZAR: // Boton dirrecion 
-        servoMotor.write(0); //angulo
+        servoMotor.write(80); //angulo
         break;
         
       case DOBLAR_IZQUIERDA: // Boton izquierda
-        servoMotor.write(0); //angulo
+        servoMotor.write(115); //angulo
         break;
         
       case OSCURO: // Sensor de luz
@@ -169,6 +178,7 @@ void movimiento(){
         digitalWrite(LED_MARCHA_ADELANTE, LOW);
         break;  
 
+   }
 }
 
  void deteccion_de_obstaculos(){
@@ -178,7 +188,6 @@ void movimiento(){
       analogWrite(MOTOR_TRACCION_R, 0);
       analogWrite(MOTOR_TRACCION, 0);
       obstaculo_D = true;
-      Serial.println("Se ha detectado un obstaculo adelante.");
     }else 
       if( reversa && ultrasonicT.Ranging(CM) <= DISTANCIA_FRENO ) {        // Si no hay obstaculotT
         digitalWrite(13, HIGH);                              // Enciende LED
@@ -192,9 +201,13 @@ void movimiento(){
 }
 
 void mostrar(){
-  // coordenadas separadas por espacio ej: 'x y'
-  //Serial.print(x);
-  //Serial.print(" ");
-  //Serial.println(y);
-  
-  }
+  // coordenadas separadas por espacio ej: 'x y' OR x:xvalor << y:yvalor
+    x = estado+1;
+    y = estado*1-3;
+    Serial << x << " " << y  ;
+    //or 
+/*    Serial << "x: " << x;
+    delay(10);
+    Serial << "y: " << y;
+    Serial.println();
+*/}
