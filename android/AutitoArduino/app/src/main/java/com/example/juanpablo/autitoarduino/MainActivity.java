@@ -614,11 +614,15 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
         if ( event.sensor.getType() == Sensor.TYPE_PROXIMITY ){
             textoProximidad.setText("Prox: "+event.values[0]);
-            if ( event.values[0] < 5 ){
-                String pare = "p";
-                byte[] bytes = pare.getBytes();
-                mBluetoothConnection.write(bytes);
+
+            if( estaEmparejado == true ){
+                if ( event.values[0] < 5 ){
+                    String pare = "p";
+                    byte[] bytes = pare.getBytes();
+                    mBluetoothConnection.write(bytes);
+                }
             }
+
         }
 
 
@@ -631,17 +635,21 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
             textoLuminosidad.setText("Lux: "+event.values[0]);
 
-            if ( event.values[0] < 40 && luzEncendida == false  ){
-                String luz = "l";
-                byte[] bytes = luz.getBytes();
-                mBluetoothConnection.write(bytes);
-                luzEncendida = true;
-            }
+            if ( estaEmparejado == true ) {
 
-            if ( event.values[0] > 45 && luzEncendida == true  ){
-                String noLuz = "k";
-                byte[] bytes = noLuz.getBytes();
-                mBluetoothConnection.write(bytes);
+                if ( event.values[0] < 40 && luzEncendida == false  ){
+                    String luz = "l";
+                    byte[] bytes = luz.getBytes();
+                    mBluetoothConnection.write(bytes);
+                    luzEncendida = true;
+                }
+
+                if ( event.values[0] > 45 && luzEncendida == true  ){
+                    String noLuz = "k";
+                    byte[] bytes = noLuz.getBytes();
+                    mBluetoothConnection.write(bytes);
+                }
+
             }
 
         }
