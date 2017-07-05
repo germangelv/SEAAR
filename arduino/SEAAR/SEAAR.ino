@@ -1,13 +1,8 @@
 #include "Wire.h"
 #include <Servo.h>
-<<<<<<< HEAD
 #include <Ultrasonic.h>
 
 // MPU9250:
-=======
-#include <Ultrasonic.h>                
-#include <Streaming.h>
->>>>>>> origin/master
 
 // PINES:
 //0 y 1 para tx y rx del bluetooth
@@ -19,7 +14,7 @@
 #define SERVO               5     //Pin 05 como SERVO
 #define LED_MARCHA_ADELANTE 7     //Pin 07 LED de adelante
 #define LED_MARCHA_ATRAS    8     //Pin 08 LED de atras
-#define MOTOR_TRACCION      9     // Pin 09 Motor hacia adelante
+#define MOTOR_TRACCION      6     // Pin 09 Motor hacia adelante
 #define MOTOR_TRACCION_R    10    //Pin 10 Motor hacia atras
 #define P_ECHO_A            11    //Pin 11 como (P_ECHO PWM ) para el Ultrasonido Trasero
 #define P_TRIGGER_A         12    //Pin 12 como (P_TRIGGER_) para el Ultrasonido Trasero
@@ -38,7 +33,6 @@
 #define APAGAR 'o'
 #define ENCENDER 'f'
 #define MAX_VELOCIDAD 'j'
-<<<<<<< HEAD
 #define ENCENDER_LED 'l'
 #define APAGAR_LED 'k'
 #define SERVO_CERO 80
@@ -46,17 +40,8 @@
 #define SERVO_DER 115
 #define VEL_NORMAL 200
 #define VEL_MAX 255   
+Servo servoMotor;  
 
-Servo servoMotor;
-      
-=======
-#define OSCURO 'l'
-#define CLARO 'k'
-//Velocidades 
-#define VEL_NORMAL 100
-#define VEL_MAX 150   
-Servo servoMotor;      
->>>>>>> origin/master
 Ultrasonic ultrasonicT(P_TRIGGER_A,P_ECHO_A,30000); 
 Ultrasonic ultrasonicD(P_TRIGGER_D,P_ECHO_D,30000); 
 
@@ -96,59 +81,30 @@ void setup() {
     pinMode(LED_PIN, OUTPUT);      
 }
 
-float x,y;
 void loop() {
     // lee el bluetooth y almacena en estado
     if (Serial.available() > 0) {    
           estado = (char)Serial.read();
-        Serial.flush();
-        Serial.println(estado);
+        
     }  
-    if(estado == 'f')
+  
+    
+    if(estado == 'f'){
       encendido = true;
+      digitalWrite(13,HIGH);
       
+    }
     // Si esta prendido muestro la info y hago la detecion de obstaculos y veo las peticiones de movimiento.
     if( encendido ) { 
-<<<<<<< HEAD
      //mostrar();
      //determinar_pos();
       deteccion_de_obstaculos();
       movimiento();       
-      delay(20);
     } 
 }
 
 void determinar_pos(){
   
-}
- 
-void deteccion_de_obstaculos(){    
-    if ( hacia_delante && ultrasonicD.Ranging(CM) <= DISTANCIA_FRENO) { // si la distancia es menor a la Distacia de freno (15)
-      digitalWrite(13, HIGH);                                // Enciende LED
-      analogWrite(MOTOR_TRACCION_R, 0);
-      analogWrite(MOTOR_TRACCION, 0);
-      obstaculo_D = true;
-  }else 
-      if( reversa && ultrasonicT.Ranging(CM) <= DISTANCIA_FRENO ) {        // Si no hay obstaculotT
-        digitalWrite(13, HIGH);                              // Enciende LED
-        analogWrite(MOTOR_TRACCION_R, 0);
-        analogWrite(MOTOR_TRACCION, 0);
-        obstaculo_T = true;
-    }else{
-      obstaculo_D = false;
-      obstaculo_T = false;
-    }
-}
-
-
-=======
-      deteccion_de_obstaculos();
-      movimiento();   
-    //  determinar_pos();
-      mostrar();    
-    } else{
-  //    restablecer_pos();
-    }
 }
 
 /*determinar_pos(){
@@ -158,24 +114,21 @@ restablecer_pos(){
     //restableser todas las variables para que quede en pos( 0 0 )
    }
 */    
->>>>>>> origin/master
 void movimiento(){
    switch(estado){
       case APAGAR:  //Boton apagar
         analogWrite(MOTOR_TRACCION_R, 0);
         analogWrite(MOTOR_TRACCION, 0);
-<<<<<<< HEAD
         servoMotor.write(SERVO_CERO);
-=======
-        servoMotor.write(80);
->>>>>>> origin/master
         analogWrite(LED_MARCHA_ADELANTE, LOW);
         analogWrite(LED_MARCHA_ATRAS, LOW);
         encendido = false;
+        digitalWrite(13,LOW);
         break;  
       
       case ADELANTE: // Boton desplazar hacia adelante a
-        if( !obstaculo_D ) {
+        if( !obstaculo_D ) {  
+          
           analogWrite(MOTOR_TRACCION, VEL_MAX);
           analogWrite(MOTOR_TRACCION_R, 0);
           digitalWrite(LED_MARCHA_ATRAS, LOW);
@@ -215,49 +168,28 @@ void movimiento(){
         break;
         
       case DOBLAR_DERECHA: // Boton derecha
-<<<<<<< HEAD
         servoMotor.write(SERVO_DER); //angulo
         break;  
         
       case ENDEREZAR: // Boton dirrecion 
         servoMotor.write(SERVO_CERO); //angulo
         break;
-        
+   
       case DOBLAR_IZQUIERDA: // Boton izquierda
         servoMotor.write(SERVO_IZQ); //angulo
-=======
-        servoMotor.write(45); //angulo
-        break;  
-        
-      case ENDEREZAR: // Boton dirrecion 
-        servoMotor.write(80); //angulo
-        break;
-        
-      case DOBLAR_IZQUIERDA: // Boton izquierda
-        servoMotor.write(115); //angulo
->>>>>>> origin/master
-        break;
-        
+        break; 
+                 
       case ENCENDER_LED: // Sensor de luz l prender
         digitalWrite(LED_MARCHA_ADELANTE, HIGH);
-        break;  
+        break; 
+         
       case APAGAR_LED: // Sensor de luz k apagar
         digitalWrite(LED_MARCHA_ADELANTE, LOW);
         break;  
-<<<<<<< HEAD
   }
 }
 
-void mostrar(){
-  // coordenadas separadas por espacio ej: 'x y'
-  // Serial.print(x);
-  // Serial.print(" ");
-  // Serial.println(y);
- }
-=======
 
-   }
-}
 
  void deteccion_de_obstaculos(){
      
@@ -280,13 +212,10 @@ void mostrar(){
 
 void mostrar(){
   // coordenadas separadas por espacio ej: 'x y' OR x:xvalor << y:yvalor
-    x = estado+1;
-    y = estado*1-3;
-    Serial << x << " " << y  ;
-    //or 
+  //or 
 /*    Serial << "x: " << x;
     delay(10);
     Serial << "y: " << y;
     Serial.println();
 */}
->>>>>>> origin/master
+
