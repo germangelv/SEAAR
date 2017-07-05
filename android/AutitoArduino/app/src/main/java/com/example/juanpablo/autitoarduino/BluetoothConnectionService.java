@@ -25,31 +25,32 @@ public class BluetoothConnectionService {
 
     private static final String TAG = "BTConnectionServ";
 
+    int bandera = 0;
+
     //Se le da un nombre a la app
     private static final String appName = "MYAPP";
 
     //crea una variable UUID, que es una direccion que el dispositivo usa para conectarse con otro dispositivo
 
     /*
-    *Un identificador único universal (UUID) es un formato estandarizado de 128 bits para un ID de string empleado
-     *  para identificar información de manera exclusiva. La ventaja de un UUID es que es suficientemente grande
-     *  como para que puedas seleccionar cualquiera al azar y no haya conflictos. En este caso, se usa para identificar
-     *  de manera única el servicio Bluetooth de tu aplicación.
+     * Un identificador único universal (UUID) es un formato estandarizado de 128 bits para un ID de string empleado
+     * para identificar información de manera exclusiva. La ventaja de un UUID es que es suficientemente grande
+     * como para que puedas seleccionar cualquiera al azar y no haya conflictos. En este caso, se usa para identificar
+     * de manera única el servicio Bluetooth de tu aplicación.
      */
-    private static final UUID MY_UUID_INSECURE =
-            UUID.fromString("8ce255c0-200a-11e0-ac64-0800200c9a66");
-    /*
+
+    //private static final UUID MY_UUID_INSECURE = UUID.fromString("8ce255c0-200a-11e0-ac64-0800200c9a66");
     private static final UUID MY_UUID_INSECURE = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
-    */
+
 
     //crea un  bt adapter
-    private final BluetoothAdapter mBluetoothAdapter;
+    private final BluetoothAdapter mBluetoothAdapter; //Representa el adaptador BT local
     Context mContext;
 
     private AcceptThread mInsecureAcceptThread;
 
     private ConnectThread mConnectThread;
-    private BluetoothDevice mmDevice;
+    private BluetoothDevice mmDevice; //Representa un adaptador BT remoto
     private UUID deviceUUID;
     ProgressDialog mProgressDialog;
 
@@ -154,10 +155,10 @@ public class BluetoothConnectionService {
 
             // se Obtiene un BluetoothSocket para una conexión con el dispositivo BT dado
             try {
-                Log.d(TAG, "ConnectThread: Trying to create InsecureRfcommSocket using UUID: " + MY_UUID_INSECURE );
+                Log.d(TAG, "ConnectThread: Tratando de crear InsecureRfcommSocket usando UUID: " + MY_UUID_INSECURE );
                 tmp = mmDevice.createRfcommSocketToServiceRecord(deviceUUID);
             } catch (IOException e) {
-                Log.e(TAG, "ConnectThread: Could not create InsecureRfcommSocket " + e.getMessage());
+                Log.e(TAG, "ConnectThread: No se pudo crear un InsecureRfcommSocket " + e.getMessage());
             }
 
             mmSocket = tmp;// le asignas nuesto bt socket a la variable temporal
@@ -173,16 +174,16 @@ public class BluetoothConnectionService {
                 // una conexion exitosa o una excepcion, si pasa este punto, es porq fue exitosa
                 mmSocket.connect();
 
-                Log.d(TAG, "run: ConnectThread connected.");
+                Log.d(TAG, "run: ConnectThread conectado.");
             } catch (IOException e) {
                 // Cierra el socket si hay una excepcion
                 try {
                     mmSocket.close();
-                    Log.d(TAG, "run: Closed Socket.");
+                    Log.d(TAG, "run: Socket Cerrado.");
                 } catch (IOException e1) {
-                    Log.e(TAG, "mConnectThread: run: Unable to close connection in socket " + e1.getMessage());
+                    Log.e(TAG, "mConnectThread: run: No se puede cerrar la conexion en el socket " + e1.getMessage());
                 }
-                Log.d(TAG, "run: ConnectThread: Could not connect to UUID: " + MY_UUID_INSECURE );
+                Log.d(TAG, "run: ConnectThread: No se puede conectar a UUID: " + MY_UUID_INSECURE );
             }
 
             //
@@ -190,10 +191,10 @@ public class BluetoothConnectionService {
         }
         public void cancel() {
             try {
-                Log.d(TAG, "cancel: Closing Client Socket.");
+                Log.d(TAG, "cancel: Cerrando socket cliente.");
                 mmSocket.close();
             } catch (IOException e) {
-                Log.e(TAG, "cancel: close() of mmSocket in Connectthread failed. " + e.getMessage());
+                Log.e(TAG, "cancel: close() de mmSocket en Connectthread fallo. " + e.getMessage());
             }
         }
     }//finaliza el connectThread
@@ -247,9 +248,11 @@ public class BluetoothConnectionService {
         private final InputStream mmInStream;
         private final OutputStream mmOutStream;
 
+
+
         //condtructor por defecto
         public ConnectedThread(BluetoothSocket socket) {
-            Log.d(TAG, "ConnectedThread: Starting.");
+            Log.d(TAG, "ConnectedThread: Iniciando.");
 
             mmSocket = socket;
             InputStream tmpIn = null;
@@ -272,16 +275,20 @@ public class BluetoothConnectionService {
 
             mmInStream = tmpIn;
             mmOutStream = tmpOut;
+
+
         }
 
         public void run(){
-            byte[] buffer = new byte[1024];  // buffer store for the stream
+            byte[] buffer = new byte[1024];  // buffer store para el stream
 
-            int bytes; // bytes returned from read()
+            int bytes; // bytes retornados desde read()
+
+            bandera = 1;
 
             // se queda escuchando al InputStream hasta que una excepcion ocurre
             while (true) {
-                // Read from the InputStream
+                // lee del InputStream
                 try {
                     bytes = mmInStream.read(buffer);
                     String incomingMessage = new String(buffer, 0, bytes);
@@ -293,20 +300,20 @@ public class BluetoothConnectionService {
                     LocalBroadcastManager.getInstance(mContext).sendBroadcast(incomingMessageIntent);
 
                 } catch (IOException e) {
-                    Log.e(TAG, "write: Error reading Input Stream. " + e.getMessage() );
+                    Log.e(TAG, "write: Error leyendo Input Stream. " + e.getMessage() );
                     break;
                 }
             }
         }
 
-        //llamar este metodo desde el main activity para enviar informacion al otro dispositivo
+        //se llama a este metodo desde el main activity para enviar informacion al otro dispositivo
         public void write(byte[] bytes) {
             String text = new String(bytes, Charset.defaultCharset());
-            Log.d(TAG, "write: Writing to outputstream: " + text);
+            Log.d(TAG, "write: escribiendo al outputstream: " + text);
             try {
                 mmOutStream.write(bytes);
             } catch (IOException e) {
-                Log.e(TAG, "write: Error writing to output stream. " + e.getMessage() );
+                Log.e(TAG, "write: error escribiendo output stream. " + e.getMessage() );
             }
         }
 
@@ -318,8 +325,9 @@ public class BluetoothConnectionService {
         }
     }
 
+    //este metodo es llamado desde el acceptThread y el connectThread
     private void connected(BluetoothSocket mmSocket, BluetoothDevice mmDevice) {
-        Log.d(TAG, "connected: Starting.");
+        Log.d(TAG, "connected: Iniciando.");
 
         // Inicia el thread para administrar la conexión y realizar transmisiones
         mConnectedThread = new ConnectedThread(mmSocket);
@@ -327,22 +335,26 @@ public class BluetoothConnectionService {
     }
 
     /**
+     *Se escribe otro metodo write porque el anterior no podra ser accedido desde el mainactivity
      *
-     * Se escribe otro metodo write porque el anterior no podra ser accedido desde el mainactivity
-     * Se escribe un metodo
      * Escribe al ConnectedThread de una manera no sincronizada
      *
      * @param out The bytes to write
      * @see ConnectedThread#write(byte[])
      */
     public void write(byte[] out) {
-        // Create temporary object
+        // se crea un objeto temporal
         ConnectedThread r;
 
-        // Synchronize a copy of the ConnectedThread
+        // sincroniza una copia the ConnectedThread
         Log.d(TAG, "write: Write Called.");
-        //perform the write
-        mConnectedThread.write(out);
+
+        if (bandera == 1){
+            mConnectedThread.write(out);
+        }
+
+
+
     }
 
 

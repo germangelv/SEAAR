@@ -1,12 +1,12 @@
 <component name="libraryTable">
   <library name="support-media-compat-25.3.1">
     <CLASSES>
-      <root url="jar://$USER_HOME$/.android/build-cache/00b22ffb994df033fac1e395e9d7586781c3243f/output/jars/classes.jar!/" />
-      <root url="file://$USER_HOME$/.android/build-cache/00b22ffb994df033fac1e395e9d7586781c3243f/output/res" />
+      <root url="file://$USER_HOME$/.android/build-cache/ed234952ca9e4e473005e47d6f2c23a3569c082c/output/res" />
+      <root url="jar://$USER_HOME$/.android/build-cache/ed234952ca9e4e473005e47d6f2c23a3569c082c/output/jars/classes.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES>
-      <root url="jar://C:/SDK/extras/android/m2repository/com/android/support/support-media-compat/25.3.1/support-media-compat-25.3.1-sources.jar!/" />
+      <root url="jar://$USER_HOME$/AppData/Local/Android/sdk/extras/android/m2repository/com/android/support/support-media-compat/25.3.1/support-media-compat-25.3.1-sources.jar!/" />
     </SOURCES>
   </library>
 </component>

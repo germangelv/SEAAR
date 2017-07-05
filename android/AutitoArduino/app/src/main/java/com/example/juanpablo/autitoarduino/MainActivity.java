@@ -47,48 +47,58 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     /********************ESTOS SON PARA EL MANEJO*****************************************************/
     BluetoothConnectionService mBluetoothConnection; //Se crea un nuevo objeto BTconnectionService
     ImageButton btnStartConnection; //BTCS
-    Button btnSend; //BTCS
-
+    //Button btnSend; //BTCS
+    ImageButton btnStartEngine;
+    int encenderFlag = 0;
+/*
     ImageButton btnAdelante;
     ImageButton btnIzquierda;
     ImageButton btnDerecha;
     ImageButton btnAtras;
-
+*/
     TextView incomingMessages; //mensajes entrantes que se ven en el chatbox
     StringBuilder messages;
 
-    EditText etSend;
+    //EditText etSend;
 
 
     //El UUID es un identificador unico universal, se usa para identificar de manera única el servicio Bluetooth de tu aplicación.
     //debe ser el mismo utilizado en BT connectionService
-    private static final UUID MY_UUID_INSECURE =
-            UUID.fromString("8ce255c0-200a-11e0-ac64-0800200c9a66");
-
-    /*
+    //private static final UUID MY_UUID_INSECURE = UUID.fromString("8ce255c0-200a-11e0-ac64-0800200c9a66");
     private static final UUID MY_UUID_INSECURE = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
-    private static final UUID MY_UUID_SECURE = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
-    */
 
-    BluetoothDevice mBTDevice;
+
+
+    BluetoothDevice mBTDevice; //dispositivo BT remoto
 
     /**************************************************************************************************/
 
     /*Declaraciones para EL ACELEROMETRO */
 
-    TextView texto;
+    TextView textoAcelerometro;
     SensorManager sensorManager;
     private Sensor acelerometro;
     boolean estaEmparejado = false ;
+    int flag = 0;
 
     /*Declaraciones para EL Sensor de luminosidad */
     private Sensor sensorLuminosidad;
     TextView textoLuminosidad;
 
-    /**********************************************/
+    /*Declaraciones sensor de aproximidad*/
+
+    private Sensor sensorAproximidad;
+    TextView textoProximidad;
+
+    /***********************************************/
+    /***************LIENZO**************************/
+
+    Lienzo lienzo;
+
+    /***************************************************/
 
     public ArrayList<BluetoothDevice> mBTDevices = new ArrayList<>(); //este ArrayList va a tener todos los dipositivos que descubrimos
-    public DeviceListAdapter mDeviceListAdapter;
+    public DeviceListAdapter mDeviceListAdapter;//la lista de los dispositivos BT encontrados
     ListView lvNewDevices; //la vista de la lista de los dispositivos encontrados
 
     /*
@@ -181,6 +191,10 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 BluetoothDevice device = intent.getParcelableExtra (BluetoothDevice.EXTRA_DEVICE);
                 mBTDevices.add(device);
                 Log.d(TAG, "onReceive: " + device.getName() + ": " + device.getAddress());
+                    /*
+                       al crear el arrayAdapter, tenemos que pasar tres parámetros, el contexto, un layout
+                        que se usará para dibujar cada item y la colección de datos.
+                     */
                 mDeviceListAdapter = new DeviceListAdapter(context, R.layout.device_adapter_view, mBTDevices);
                 lvNewDevices.setAdapter(mDeviceListAdapter);
             }
@@ -248,9 +262,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         mBTDevices = new ArrayList<>();
 
 
-        /********************** para el acelerometro**************/
+        /********************** para el acelerometro*******************/
 
-        texto = (TextView)findViewById(R.id.texto);
+        textoAcelerometro = (TextView)findViewById(R.id.textoAcelerometro);
 
         sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE); //me conecto con los sensores del dispositivo
         acelerometro = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
@@ -262,19 +276,27 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         sensorLuminosidad = sensorManager.getDefaultSensor(Sensor.TYPE_LIGHT);
         textoLuminosidad = (TextView)findViewById(R.id.textoLuminosidad);
 
-        /*******************************************************/
+        /***************************sensor de apoximidad**************/
 
+        sensorAproximidad = sensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY);
+        textoProximidad = (TextView)findViewById(R.id.textoProximidad);
+
+
+
+        lienzo = (Lienzo)findViewById(R.id.lienzo);
 
 
 /********************** PARA la comuniciacion y botones de manejo del auto /******************************************/
+        btnStartEngine = (ImageButton) findViewById(R.id.btnStartEngine);
         btnStartConnection = (ImageButton) findViewById(R.id.btnStartConnection);
-        btnSend = (Button) findViewById(R.id.btnSend);
-        etSend = (EditText) findViewById(R.id.editText);
+        //btnSend = (Button) findViewById(R.id.btnSend);
+        //etSend = (EditText) findViewById(R.id.editText);
+        /*
         btnAdelante = (ImageButton) findViewById(R.id.btnAdelante);
         btnIzquierda = (ImageButton) findViewById(R.id.btnIzquierda);
         btnDerecha = (ImageButton) findViewById(R.id.btnDerecha);
         btnAtras = (ImageButton) findViewById(R.id.btnAtras);
-
+        */
         incomingMessages = (TextView) findViewById(R.id.incomingMessage);
         messages = new StringBuilder();
         LocalBroadcastManager.getInstance(this).registerReceiver(mReceiver, new IntentFilter("incomingMessage"));
@@ -297,7 +319,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         btnONOFF.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.d(TAG, "onClick: enabling/disabling bluetooth.");
+                Log.d(TAG, "onClick: habilitando/deshabilitando bluetooth.");
                 enableDisableBT();
             }
         });
@@ -310,6 +332,37 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             }
         });
 
+        //boton que manda la F para que arranque el autito
+        btnStartEngine.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+
+                if( encenderFlag == 0  ){
+                    String encender = "f";
+                    byte[] bytes = encender.getBytes();
+                    if( estaEmparejado == true  ){
+                        mBluetoothConnection.write(bytes);
+                        encenderFlag = 1;
+                    }
+                }else{
+                    String apagar = "o";
+                    byte[] bytes = apagar.getBytes();
+                    if( estaEmparejado == true  ){
+                        mBluetoothConnection.write(bytes);
+                        encenderFlag = 0;
+                    }
+                }
+
+
+
+
+
+            }
+        });
+
+
+/*
         //este metodo convierte lo que hay en el editText a bytes, y lo manda a la conexion a la mBluetoothConnection
         btnSend.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -321,6 +374,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 }
             }
         });
+*/
+/*
 
         btnAdelante.setOnClickListener(new View.OnClickListener()
         {
@@ -374,23 +429,31 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 }
             }
         });
-
+*/
     } //aca termina el onCreate
 
 
     //Aca es donde se reciben los mensajes, en el text view
+
     BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             String text = intent.getStringExtra("theMessage");
 
-            /*
-            messages.append(text + "\n");
-            incomingMessages.setText(messages);
-            */
+
+            // messages.append(text + "\n");
+            //incomingMessages.setText(messages);
+            String coordenadas[] = text.split(" ");
+
+            if( coordenadas.length == 2 ){
+                Float x = Float.parseFloat(coordenadas[0]);
+                Float y = Float.parseFloat(coordenadas[1]);
+                lienzo.dibujar( x , y );
+            }
 
             incomingMessages.setText("");
             incomingMessages.append(text);
+
 
         }
     };
@@ -398,7 +461,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
 
     //CREA UN METODO PARA LA CONEXION QUE COMIENZA
-//***LA CONEXION FALLARA Y LA APPA CRASHAREA SI NO SE APAREARON LOS DISPOSITIVIOS PRIMERO
     public void startConnection(){
         startBTConnection(mBTDevice,MY_UUID_INSECURE);
     }
@@ -425,11 +487,11 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     public void enableDisableBT(){
         if(mBluetoothAdapter == null){
             //el telefono no tiene BT, no lo puede usar
-            Log.d(TAG, "enableDisableBT: Does not have BT capabilities.");
+            Log.d(TAG, "enableDisableBT: No tenes bluetooth.");
         }
         //Si el BT no esta habilitado, entonces se lo habilita
         if( !mBluetoothAdapter.isEnabled() ){
-            Log.d(TAG, "enableDisableBT: enabling BT.");
+            Log.d(TAG, "enableDisableBT: habilitando BT.");
             Intent enableBTIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
             startActivity(enableBTIntent);
 
@@ -440,7 +502,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
         //si el BT esta habilitado se lo deshabilita
         if(mBluetoothAdapter.isEnabled()){
-            Log.d(TAG, "enableDisableBT: disabling BT.");
+            Log.d(TAG, "enableDisableBT: deshabilitando BT.");
             mBluetoothAdapter.disable();
 
             IntentFilter BTIntent = new IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED);
@@ -452,7 +514,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     // este metodo es para habilitar que el dispositivo pueda ser descubierto por otros dispositivos BT
     //se activa cuando se have click en el boton btnDiscoverable_on_off
     public void btnEnableDisable_Discoverable(View view) {
-        Log.d(TAG, "btnEnableDisable_Discoverable: Making device discoverable for 300 seconds.");
+        Log.d(TAG, "btnEnableDisable_Discoverable: haciendo al dispositivo descubrible por 300 segundos.");
 
         Intent discoverableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
         discoverableIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 300);
@@ -466,12 +528,12 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
     //Aca esta lo que hace el boton que busca dispositivos BT (btnFindUnpairedDevices)
     public void btnDiscover(View view) {
-        Log.d(TAG, "btnDiscover: Looking for unpaired devices.");
+        Log.d(TAG, "btnDiscover: Buscando dispositivos no emparejados.");
 
         //Si el BT ya esa en discovering mode, si ya esta buscando dispositivos, cancela la busqueda
         if(mBluetoothAdapter.isDiscovering()){
             mBluetoothAdapter.cancelDiscovery();
-            Log.d(TAG, "btnDiscover: Canceling discovery.");
+            Log.d(TAG, "btnDiscover: cancelando busqueda.");
 
             //check BT permissions in manifest
             //si usamos cualquier version mas reciente de android que lollipop
@@ -549,6 +611,41 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     @Override
     public void onSensorChanged(SensorEvent event) {
 
+
+        if ( event.sensor.getType() == Sensor.TYPE_PROXIMITY ){
+            textoProximidad.setText("Prox: "+event.values[0]);
+            if ( event.values[0] < 5 ){
+                String pare = "p";
+                byte[] bytes = pare.getBytes();
+                mBluetoothConnection.write(bytes);
+            }
+        }
+
+
+        if( event.sensor.getType() == Sensor.TYPE_LIGHT  ){
+
+
+            boolean luzEncendida = false;
+
+            //textoLuminosidad.setText("");
+
+            textoLuminosidad.setText("Lux: "+event.values[0]);
+
+            if ( event.values[0] < 40 && luzEncendida == false  ){
+                String luz = "l";
+                byte[] bytes = luz.getBytes();
+                mBluetoothConnection.write(bytes);
+                luzEncendida = true;
+            }
+
+            if ( event.values[0] > 45 && luzEncendida == true  ){
+                String noLuz = "k";
+                byte[] bytes = noLuz.getBytes();
+                mBluetoothConnection.write(bytes);
+            }
+
+        }
+
         if( event.sensor.getType() == Sensor.TYPE_ACCELEROMETER ){
 
             float x,y,z;
@@ -556,49 +653,56 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             y = event.values[1];
             z = event.values[2];
 
-            texto.setText("");
-            texto.append("\n" + "El valor de X: " + x + "\n" + "El valor de Y: " + y + "\n" + "El valor de Z: " + z);
+            textoAcelerometro.setText("");
+            textoAcelerometro.append("X: " + x  + "\n" +"Z: " + z);
 
-            if( estaEmparejado == true  ) {
+            if( estaEmparejado == true ) {
 
-                if (z > 6 && z < 8.4) {
+                if ( z > 7 && z < 8 && flag != 1) {
                     String adelante = "w";
                     byte[] bytes = adelante.getBytes();
                     mBluetoothConnection.write(bytes);
+                    flag = 1;
                 }
 
-                if (z > 8.5) {
-                    String adelante = "MAX";
-                    byte[] bytes = adelante.getBytes();
+                if ( z > 10 && flag != 2 ) {
+                    String maxVel = "j";
+                    byte[] bytes = maxVel.getBytes();
                     mBluetoothConnection.write(bytes);
+                    flag = 2;
                 }
 
-                if (z < -2) {
-                    String adelante = "s";
-                    byte[] bytes = adelante.getBytes();
+                if ( z < -2 && flag != 3 ) {
+                    String atras = "s";
+                    byte[] bytes = atras.getBytes();
                     mBluetoothConnection.write(bytes);
+                    flag = 3;
                 }
 
-                if (x < -3) {
-                    String adelante = "d";
-                    byte[] bytes = adelante.getBytes();
+                if ( x < -3 && flag != 4 ) {
+                    String derecha = "d";
+                    byte[] bytes = derecha.getBytes();
                     mBluetoothConnection.write(bytes);
+                    flag = 4;
+
                 }
 
 
-                if (x > 3) {
-                    String adelante = "i";
-                    byte[] bytes = adelante.getBytes();
+                if ( x > 3 && flag != 5 ) {
+                    String izquierda = "i";
+                    byte[] bytes = izquierda.getBytes();
                     mBluetoothConnection.write(bytes);
+                    flag = 5;
+                }
+
+                if ( x > -1 && x < 1 && flag != 6 && ( flag == 4 || flag == 5 ) ) {
+                    String enderezar = "x";
+                    byte[] bytes = enderezar.getBytes();
+                    mBluetoothConnection.write(bytes);
+                    flag = 6;
                 }
             }
         }
-
-        if( event.sensor.getType() == Sensor.TYPE_LIGHT ){
-            //textoLuminosidad.setText("");
-            textoLuminosidad.setText(""+event.values[0]);
-        }
-
 
 
     }

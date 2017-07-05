@@ -1,10 +1,6 @@
 [
     {
-        "merged": "C:\\MisAplicaciones\\AppV5.5\\AutitoArduino\\app\\build\\intermediates\\res\\merged\\debug\\layout-v16\\notification_template_custom_big.xml",
-        "source": "C:\\Users\\Juan Pablo\\.android\\build-cache\\2f885df00515128043f8c2760dd9e1a1b9d040dd\\output\\res\\layout-v16\\notification_template_custom_big.xml"
-    },
-    {
-        "merged": "C:\\MisAplicaciones\\AppV6\\AutitoArduino\\app\\build\\intermediates\\res\\merged\\debug\\layout-v16\\notification_template_custom_big.xml",
-        "source": "C:\\Users\\Juan Pablo\\.android\\build-cache\\2f885df00515128043f8c2760dd9e1a1b9d040dd\\output\\res\\layout-v16\\notification_template_custom_big.xml"
+        "merged": "C:\\AplicacionesAndroid\\AppV7.5\\AutitoArduino\\app\\build\\intermediates\\res\\merged\\debug\\layout-v16\\notification_template_custom_big.xml",
+        "source": "C:\\Users\\argen\\.android\\build-cache\\049482923e50362ee309ef1692d37cccfa58b717\\output\\res\\layout-v16\\notification_template_custom_big.xml"
     }
 ]
